@@ -2,7 +2,7 @@ import type { ProviderConfigs } from 'types/providers';
 import OpenAIAPIConfig from './api';
 import { OpenAIChatCompleteConfig } from './chatComplete';
 
-const OpenAIConfig: ProviderConfigs = {
+let OpenAIConfig: ProviderConfigs = {
 	api: OpenAIAPIConfig,
 	chatComplete: OpenAIChatCompleteConfig
 };
