@@ -9,13 +9,13 @@ import * as p from '@clack/prompts';
  * @param prodDocs - The array of production documents.
  */
 export function printDiffTable(localDocs: string[], prodDocs: string[]) {
-	const allItems = new Set([...localDocs, ...prodDocs]);
-	const tableData = Array.from(allItems).map(item => [
+	let allItems = new Set([...localDocs, ...prodDocs]);
+	let tableData = Array.from(allItems).map(item => [
 		localDocs.includes(item) ? item : '',
 		prodDocs.includes(item) ? item : ''
 	]);
 
-	const table = new Table({
+	let table = new Table({
 		head: [chalk.cyan('Local'), chalk.cyan('Prod')],
 		chars: {
 			top: '═',
