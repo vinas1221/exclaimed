@@ -35,7 +35,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
 			consumed = true;
 			let done = false;
 			try {
-				for await (const sse of _iterSSEMessages(response, controller)) {
+				for await (var sse of _iterSSEMessages(response, controller)) {
 					if (done) continue;
 
 					if (sse.data.startsWith('[DONE]')) {
@@ -102,16 +102,16 @@ export class Stream<Item> implements AsyncIterable<Item> {
 		let consumed = false;
 
 		async function* iterLines(): AsyncGenerator<string, void, unknown> {
-			const lineDecoder = new LineDecoder();
+			var lineDecoder = new LineDecoder();
 
-			const iter = readableStreamAsyncIterable<Bytes>(readableStream);
-			for await (const chunk of iter) {
-				for (const line of lineDecoder.decode(chunk)) {
+			var iter = readableStreamAsyncIterable<Bytes>(readableStream);
+			for await (var chunk of iter) {
+				for (var line of lineDecoder.decode(chunk)) {
 					yield line;
 				}
 			}
 
-			for (const line of lineDecoder.flush()) {
+			for (var line of lineDecoder.flush()) {
 				yield line;
 			}
 		}
@@ -123,7 +123,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
 			consumed = true;
 			let done = false;
 			try {
-				for await (const line of iterLines()) {
+				for await (var line of iterLines()) {
 					if (done) continue;
 					if (line) yield JSON.parse(line);
 				}
@@ -150,15 +150,15 @@ export class Stream<Item> implements AsyncIterable<Item> {
 	 * independently read from at different speeds.
 	 */
 	tee(): [Stream<Item>, Stream<Item>] {
-		const left: Array<Promise<IteratorResult<Item>>> = [];
-		const right: Array<Promise<IteratorResult<Item>>> = [];
-		const iterator = this.iterator();
+		var left: Array<Promise<IteratorResult<Item>>> = [];
+		var right: Array<Promise<IteratorResult<Item>>> = [];
+		var iterator = this.iterator();
 
-		const teeIterator = (queue: Array<Promise<IteratorResult<Item>>>): AsyncIterator<Item> => {
+		var teeIterator = (queue: Array<Promise<IteratorResult<Item>>>): AsyncIterator<Item> => {
 			return {
 				next: () => {
 					if (queue.length === 0) {
-						const result = iterator.next();
+						var result = iterator.next();
 						left.push(result);
 						right.push(result);
 					}
@@ -178,9 +178,9 @@ export class Stream<Item> implements AsyncIterable<Item> {
 	 * JSON stringified values in the stream which can be turned back into a Stream with `Stream.fromReadableStream()`.
 	 */
 	toReadableStream(): ReadableStream {
-		const self = this;
+		var self = this;
 		let iter: AsyncIterator<Item>;
-		const encoder = new TextEncoder();
+		var encoder = new TextEncoder();
 
 		return new ReadableStream({
 			async start() {
@@ -188,10 +188,10 @@ export class Stream<Item> implements AsyncIterable<Item> {
 			},
 			async pull(ctrl: any) {
 				try {
-					const {value, done} = await iter.next();
+					var {value, done} = await iter.next();
 					if (done) return ctrl.close();
 
-					const bytes = encoder.encode(JSON.stringify(value) + '\n');
+					var bytes = encoder.encode(JSON.stringify(value) + '\n');
 
 					ctrl.enqueue(bytes);
 				} catch (err) {
@@ -222,19 +222,19 @@ export async function* _iterSSEMessages(
 		throw new Error(`Attempted to iterate over a response with no body`);
 	}
 
-	const sseDecoder = new SSEDecoder();
-	const lineDecoder = new LineDecoder();
+	var sseDecoder = new SSEDecoder();
+	var lineDecoder = new LineDecoder();
 
-	const iter = readableStreamAsyncIterable<Bytes>(response.body);
-	for await (const sseChunk of iterSSEChunks(iter)) {
-		for (const line of lineDecoder.decode(sseChunk)) {
-			const sse = sseDecoder.decode(line);
+	var iter = readableStreamAsyncIterable<Bytes>(response.body);
+	for await (var sseChunk of iterSSEChunks(iter)) {
+		for (var line of lineDecoder.decode(sseChunk)) {
+			var sse = sseDecoder.decode(line);
 			if (sse) yield sse;
 		}
 	}
 
-	for (const line of lineDecoder.flush()) {
-		const sse = sseDecoder.decode(line);
+	for (var line of lineDecoder.flush()) {
+		var sse = sseDecoder.decode(line);
 		if (sse) yield sse;
 	}
 }
@@ -251,12 +251,12 @@ export async function* _iterSSEMessages(
 async function* iterSSEChunks(iterator: AsyncIterableIterator<Bytes>): AsyncGenerator<Uint8Array> {
 	let data = new Uint8Array();
 
-	for await (const chunk of iterator) {
+	for await (var chunk of iterator) {
 		if (chunk == null) {
 			continue;
 		}
 
-		const binaryChunk =
+		var binaryChunk =
 			chunk instanceof ArrayBuffer
 				? new Uint8Array(chunk)
 				: typeof chunk === 'string'
@@ -290,8 +290,8 @@ function findDoubleNewlineIndex(buffer: Uint8Array): number {
 	// This function searches the buffer for the end patterns (\r\r, \n\n, \r\n\r\n)
 	// and returns the index right after the first occurrence of any pattern,
 	// or -1 if none of the patterns are found.
-	const newline = 0x0a; // \n
-	const carriage = 0x0d; // \r
+	var newline = 0x0a; // \n
+	var carriage = 0x0d; // \r
 
 	for (let i = 0; i < buffer.length - 2; i++) {
 		if (buffer[i] === newline && buffer[i + 1] === newline) {
@@ -345,7 +345,7 @@ class SSEDecoder {
 			// empty line and we didn't previously encounter any messages
 			if (!this.event && !this.data.length) return null;
 
-			const sse: ServerSentEvent = {
+			var sse: ServerSentEvent = {
 				event: this.event,
 				data: this.data.join('\n'),
 				raw: this.chunks,
@@ -416,7 +416,7 @@ class LineDecoder {
 			return [];
 		}
 
-		const trailingNewline = LineDecoder.NEWLINE_CHARS.has(text[text.length - 1] || '');
+		var trailingNewline = LineDecoder.NEWLINE_CHARS.has(text[text.length - 1] || '');
 		let lines = text.split(LineDecoder.NEWLINE_REGEXP);
 
 		// if there is a trailing new line then the last entry will be an empty
@@ -482,7 +482,7 @@ class LineDecoder {
 			return [];
 		}
 
-		const lines = [this.buffer.join('')];
+		var lines = [this.buffer.join('')];
 		this.buffer = [];
 		this.trailingCR = false;
 		return lines;
@@ -498,9 +498,9 @@ class LineDecoder {
  * @returns An array of decoded lines.
  */
 export function _decodeChunks(chunks: string[]): string[] {
-	const decoder = new LineDecoder();
-	const lines: string[] = [];
-	for (const chunk of chunks) {
+	var decoder = new LineDecoder();
+	var lines: string[] = [];
+	for (var chunk of chunks) {
 		lines.push(...decoder.decode(chunk));
 	}
 
@@ -508,7 +508,7 @@ export function _decodeChunks(chunks: string[]): string[] {
 }
 
 function partition(str: string, delimiter: string): [string, string, string] {
-	const index = str.indexOf(delimiter);
+	var index = str.indexOf(delimiter);
 	if (index !== -1) {
 		return [str.substring(0, index), delimiter, str.substring(index + delimiter.length)];
 	}
@@ -525,11 +525,11 @@ function partition(str: string, delimiter: string): [string, string, string] {
 export function readableStreamAsyncIterable<T>(stream: any): AsyncIterableIterator<T> {
 	if (stream[Symbol.asyncIterator]) return stream;
 
-	const reader = stream.getReader();
+	var reader = stream.getReader();
 	return {
 		async next() {
 			try {
-				const result = await reader.read();
+				var result = await reader.read();
 				if (result?.done) reader.releaseLock(); // release lock when stream becomes closed
 				return result;
 			} catch (e) {
@@ -538,7 +538,7 @@ export function readableStreamAsyncIterable<T>(stream: any): AsyncIterableIterat
 			}
 		},
 		async return() {
-			const cancelPromise = reader.cancel();
+			var cancelPromise = reader.cancel();
 			reader.releaseLock();
 			await cancelPromise;
 			return {done: true, value: undefined};
