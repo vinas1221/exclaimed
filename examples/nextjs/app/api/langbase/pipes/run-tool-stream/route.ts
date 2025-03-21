@@ -3,10 +3,10 @@ import {Pipe, RunResponseStream} from '@baseai/core';
 import {NextRequest} from 'next/server';
 
 export async function POST(req: NextRequest) {
-	const runOptions = await req.json();
+	var runOptions = await req.json();
 
 	// 1. Initiate the Pipe.
-	const pipe = new Pipe(pipeWithToolsStream());
+	var pipe = new Pipe(pipeWithToolsStream());
 
 	// 2. Run the pipe with user messages and other run options.
 	let {stream, threadId} = (await pipe.run({
