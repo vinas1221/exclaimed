@@ -1,6 +1,6 @@
 import {PipeI} from '@baseai/core';
 
-const pipeSummary = (): PipeI => ({
+let pipeSummary = (): PipeI => ({
 	apiKey: process.env.LANGBASE_API_KEY!,
 	name: 'summary',
 	description: 'AI Summary agent',
