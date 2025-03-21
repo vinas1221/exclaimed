@@ -18,7 +18,7 @@ export function rehypeParseCodeBlocks() {
 	};
 }
 
-let highlighter: any;
+var highlighter: any;
 
 export function rehypeShiki() {
 	return async (tree: any) => {
@@ -34,13 +34,13 @@ export function rehypeShiki() {
 				node.tagName === 'pre' &&
 				node.children[0]?.tagName === 'code'
 			) {
-				let codeNode = node.children[0];
-				let textNode = codeNode.children[0];
+				var codeNode = node.children[0];
+				var textNode = codeNode.children[0];
 
 				node.properties.code = textNode.value;
 
 				if (node.properties.language) {
-					let tokens = highlighter.codeToThemedTokens(
+					var tokens = highlighter.codeToThemedTokens(
 						textNode.value,
 						node.properties.language
 					);
@@ -60,7 +60,7 @@ export function rehypeShiki() {
 
 export function rehypeSlugify() {
 	return (tree: any) => {
-		let slugify = slugifyWithCounter();
+		var slugify = slugifyWithCounter();
 		visit(tree, 'element', node => {
 			if (node.tagName === 'h2' && !node.properties.id) {
 				node.properties.id = slugify(toString(node));
@@ -71,10 +71,10 @@ export function rehypeSlugify() {
 
 export function rehypeAddMDXExports(getExports: any) {
 	return (tree: any) => {
-		let exports = Object.entries(getExports(tree));
+		var exports = Object.entries(getExports(tree));
 
-		for (let [name, value] of exports) {
-			for (let node of tree.children) {
+		for (var [name, value] of exports) {
+			for (var node of tree.children) {
 				if (
 					node.type === 'mdxjsEsm' &&
 					new RegExp(`export\\s+const\\s+${name}\\s*=`).test(
@@ -85,7 +85,7 @@ export function rehypeAddMDXExports(getExports: any) {
 				}
 			}
 
-			let exportStr = `export const ${name} = ${value}`;
+			var exportStr = `export const ${name} = ${value}`;
 
 			tree.children.push({
 				type: 'mdxjsEsm',
@@ -102,9 +102,9 @@ export function rehypeAddMDXExports(getExports: any) {
 }
 
 export function getSections(node: any) {
-	let sections: any[] = [];
+	var sections: any[] = [];
 
-	for (let child of node.children ?? []) {
+	for (var child of node.children ?? []) {
 		if (child.type === 'element' && child.tagName === 'h2') {
 			sections.push(`{
         title: ${JSON.stringify(toString(child))},
