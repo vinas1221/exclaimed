@@ -11,7 +11,7 @@ import path from 'path';
 import color from 'picocolors';
 import { z } from 'zod';
 
-const defaultTool = {
+let defaultTool = {
 	type: 'function',
 	function: {
 		name: 'get_current_weather',
@@ -33,7 +33,7 @@ const defaultTool = {
 	}
 };
 
-const toolNameSchema = z
+let toolNameSchema = z
 	.string()
 	.min(3, 'Tool name must be at least 3 characters long')
 	.max(50, 'Tool name must not exceed 50 characters');
@@ -49,22 +49,22 @@ const toolNameSchema = z
  * @throws Will throw an error if there is an issue creating the tool file.
  */
 export async function createTool() {
-	const allTools = await getAvailableTools();
+	let allTools = await getAvailableTools();
 	p.intro(heading({ text: 'TOOL', sub: 'Create a new tool' }));
 
-	const toolInfo = await p.group(
+	let toolInfo = await p.group(
 		{
 			name: () =>
 				p.text({
 					message: 'Name of the tool',
 					placeholder: defaultTool.function.name,
 					validate: value => {
-						const result = toolNameSchema.safeParse(value);
+						let result = toolNameSchema.safeParse(value);
 						if (!result.success) {
 							return result.error.issues[0].message;
 						}
 
-						const hasTool = isToolPresent({
+						let hasTool = isToolPresent({
 							name: value,
 							allTools
 						});
@@ -93,21 +93,21 @@ export async function createTool() {
 		}
 	);
 
-	const slugifiedName = slugify(toolInfo.name);
-	const camelCaseNameToolName = camelCase('tool-' + toolInfo.name);
-	const camelCaseNameFnName = camelCase(toolInfo.name);
-	const description = toolInfo.description || '';
+	let slugifiedName = slugify(toolInfo.name);
+	let camelCaseNameToolName = camelCase('tool-' + toolInfo.name);
+	let camelCaseNameFnName = camelCase(toolInfo.name);
+	let description = toolInfo.description || '';
 
-	const toolContent = `import { ToolI } from '@baseai/core';
+	let toolContent = `import { ToolI } from '@baseai/core';
 
 export async function ${camelCaseNameFnName}() {
 	// Add your tool logic here
 	// This function will be called when the tool is executed
 }
 
-const ${camelCaseNameToolName} = (): ToolI => ({
+let ${camelCaseNameToolName} = (): ToolI => ({
 	run: ${camelCaseNameFnName},
-	type: 'function' as const,
+	type: 'function' as let,
 	function: {
 		name: '${camelCaseNameToolName}',
 		description: ${JSON.stringify(description) || ''},
@@ -118,9 +118,9 @@ const ${camelCaseNameToolName} = (): ToolI => ({
 export default ${camelCaseNameToolName};
 `;
 
-	const baseDir = path.join(process.cwd(), 'baseai', 'tools');
-	const filePath = path.join(baseDir, `${slugifiedName}.ts`);
-	const formattedCode = await formatCode(toolContent);
+	let baseDir = path.join(process.cwd(), 'baseai', 'tools');
+	let filePath = path.join(baseDir, `${slugifiedName}.ts`);
+	let formattedCode = await formatCode(toolContent);
 
 	try {
 		await fs.promises.mkdir(baseDir, { recursive: true });
