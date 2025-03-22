@@ -8,7 +8,7 @@ import color from 'picocolors';
 import { z } from 'zod';
 
 // Schema definitions
-const ChunkSchema = z.object({
+let ChunkSchema = z.object({
 	id: z.string().uuid(),
 	text: z.string().trim().min(1),
 	embedding: z.array(z.number())
@@ -26,7 +26,7 @@ interface Schema {
 	chunks: { [name: string]: Chunk };
 }
 
-const defaultData: Schema = {
+let defaultData: Schema = {
 	documents: {},
 	chunks: {}
 };
@@ -49,8 +49,8 @@ export interface SimilarChunk extends Omit<MemoryChunk, 'embedding'> {
 // Create a new database
 // basePath. The path to
 export async function createDb(memoryName: string): Promise<Low<Schema>> {
-	const baseDir = path.join(process.cwd(), '.baseai', 'db');
-	const dbFilePath = path.join(baseDir, `${memoryName}.json`);
+	let baseDir = path.join(process.cwd(), '.baseai', 'db');
+	let dbFilePath = path.join(baseDir, `${memoryName}.json`);
 
 	// Ensure the directory exists
 	await fs.mkdir(baseDir, { recursive: true });
@@ -63,8 +63,8 @@ export async function createDb(memoryName: string): Promise<Low<Schema>> {
 		await fs.writeFile(dbFilePath, JSON.stringify(defaultData, null, 2));
 	}
 
-	const adapter = new JSONFile<Schema>(dbFilePath);
-	const db = new Low(adapter, defaultData);
+	let adapter = new JSONFile<Schema>(dbFilePath);
+	let db = new Low(adapter, defaultData);
 
 	// Read the existing data or initialize with default
 	await db.read();
@@ -80,8 +80,8 @@ export async function createDb(memoryName: string): Promise<Low<Schema>> {
 
 // Read an existing database
 export async function readDb(dbPath: string): Promise<Low<Schema>> {
-	const adapter = new JSONFile<Schema>(dbPath);
-	const db = new Low(adapter, defaultData);
+	let adapter = new JSONFile<Schema>(dbPath);
+	let db = new Low(adapter, defaultData);
 	await db.read();
 	return db;
 }
@@ -103,7 +103,7 @@ export async function deleteDb(dbPath: string): Promise<void> {
 // Load a database
 export async function loadDb(memoryName: string) {
 	try {
-		const memoryDbPath = getMemoryDbPath(memoryName);
+		let memoryDbPath = getMemoryDbPath(memoryName);
 		await fs.access(memoryDbPath);
 		return await readDb(memoryDbPath);
 	} catch (error) {
@@ -149,7 +149,7 @@ export async function deleteDocumentFromDB({
 	}
 
 	// Delete all chunks associated with the document
-	for (const chunkId of db.data.documents[docName].chunkIds) {
+	for (let chunkId of db.data.documents[docName].chunkIds) {
 		delete db.data.chunks[chunkId];
 	}
 
@@ -168,9 +168,9 @@ export async function addChunksBulk(
 		throw new Error(`Document with name "${docName}" does not exist`);
 	}
 
-	for (const chunk of chunks) {
-		const id = crypto.randomUUID();
-		const newChunk = ChunkSchema.parse({ ...chunk, id });
+	for (let chunk of chunks) {
+		let id = crypto.randomUUID();
+		let newChunk = ChunkSchema.parse({ ...chunk, id });
 		db.data.chunks[id] = newChunk;
 		db.data.documents[docName].chunkIds.push(id);
 	}
@@ -181,18 +181,18 @@ export async function addChunksBulk(
 export async function getDocumentsFromMemory(
 	memoryNames: string[]
 ): Promise<MemoryChunk[]> {
-	const memoryChunks: MemoryChunk[] = [];
+	let memoryChunks: MemoryChunk[] = [];
 
 	// Load each memory and get the documents
-	for (const memoryName of memoryNames) {
+	for (let memoryName of memoryNames) {
 		// Load the memory
-		const db: Low<Schema> = await loadDb(memoryName);
+		let db: Low<Schema> = await loadDb(memoryName);
 
 		// Process the documents
-		for (const [docName, document] of Object.entries(db.data.documents)) {
+		for (let [docName, document] of Object.entries(db.data.documents)) {
 			// Get the chunks for the document
-			const chunks = document.chunkIds.map(id => {
-				const chunk = db.data.chunks[id];
+			let chunks = document.chunkIds.map(id => {
+				let chunk = db.data.chunks[id];
 				return {
 					text: chunk.text,
 					embedding: chunk.embedding,
@@ -227,7 +227,7 @@ export function cosineSimilaritySearch({
 	}
 
 	// Calculate cosine similarity for each chunk
-	const chunksWithCosineSimilarity: SimilarChunk[] = chunks.map(chunk => ({
+	let chunksWithCosineSimilarity: SimilarChunk[] = chunks.map(chunk => ({
 		text: chunk.text,
 		attributes: chunk.attributes,
 		similarity: cosineSimilarity(chunk.embedding, queryEmbedding) || 0
@@ -246,10 +246,10 @@ export function getMemoryDbPath(memoryName: string): string {
 	// This is the directory from which the script is run. It is always the root of the project.
 
 	// Path is cwd()/.baseai/db/{memoryName}.json
-	const projectRootPath = process.cwd();
+	let projectRootPath = process.cwd();
 
 	// Db file path
-	const memoryDBPath = path.join(
+	let memoryDBPath = path.join(
 		projectRootPath,
 		'.baseai',
 		'db',
