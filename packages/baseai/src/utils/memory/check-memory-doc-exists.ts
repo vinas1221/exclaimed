@@ -6,7 +6,7 @@ import { validateMemoryDocNames } from './lib';
 
 type Spinner = ReturnType<typeof p.spinner>;
 
-export const isMemoryDocExist = async ({
+export let isMemoryDocExist = async ({
 	memoryName,
 	documentName,
 	spinner
@@ -30,7 +30,7 @@ export const isMemoryDocExist = async ({
 	}
 
 	// 1- Check memory exists.
-	const { memoryName: validMemoryName, documentName: validDocumentName } =
+	let { memoryName: validMemoryName, documentName: validDocumentName } =
 		validateMemoryDocNames({
 			memoryName,
 			documentName
@@ -41,7 +41,7 @@ export const isMemoryDocExist = async ({
 
 	// 3- Load memory data.
 	spinner.start('Loading docs...');
-	const memoryFiles = await loadMemoryFiles(validMemoryName);
+	let memoryFiles = await loadMemoryFiles(validMemoryName);
 
 	if (memoryFiles.length === 0) {
 		p.cancel(`No valid documents found in memory '${memoryName}'.`);
@@ -49,7 +49,7 @@ export const isMemoryDocExist = async ({
 	}
 
 	// Find the document file.
-	const memoryFile = memoryFiles.find(
+	let memoryFile = memoryFiles.find(
 		file => file.name === validDocumentName
 	);
 
