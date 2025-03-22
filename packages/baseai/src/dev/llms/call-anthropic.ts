@@ -22,18 +22,18 @@ export async function callAnthropic({
 	paramsTools: PipeTool[] | undefined;
 }) {
 	try {
-		const modelParams = buildModelParams(pipe, stream, messages);
+		let modelParams = buildModelParams(pipe, stream, messages);
 		addToolsToParams(modelParams, pipe, paramsTools);
 
 		// Transform params according to provider's format
-		const transformedRequestParams = transformToProviderRequest({
+		let transformedRequestParams = transformToProviderRequest({
 			provider: ANTHROPIC,
 			params: modelParams,
 			fn: 'chatComplete'
 		});
 		dlog('Anthropic request params', transformedRequestParams);
 
-		const providerOptions = { provider: ANTHROPIC, llmApiKey };
+		let providerOptions = { provider: ANTHROPIC, llmApiKey };
 
 		return await handleProviderRequest({
 			providerOptions,
@@ -51,8 +51,8 @@ function buildModelParams(
 	stream: boolean,
 	messages: Message[]
 ): ModelParams {
-	const model = pipe.model.split(':')[1];
-	const {
+	let model = pipe.model.split(':')[1];
+	let {
 		top_p,
 		max_tokens,
 		temperature,
