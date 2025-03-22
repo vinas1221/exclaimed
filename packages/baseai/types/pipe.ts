@@ -13,7 +13,7 @@ import type {
 } from './model';
 import type { PipeTool } from './tools';
 
-export const schemaMessage = z
+export let schemaMessage = z
 	.object({
 		role: z.enum(['system', 'user', 'assistant', 'function', 'tool']),
 		content: z.string().nullable(),
@@ -34,7 +34,7 @@ export const schemaMessage = z
 			// If content is null, role isn't assistant and tool_calls is not present.
 			// then the schema is invalid
 			// because the message content is null and its not an assistant tool call
-			const isSchemaInvalid =
+			let isSchemaInvalid =
 				content === null && role !== 'assistant' && !tool_calls;
 
 			if (isSchemaInvalid) return false;
@@ -47,12 +47,12 @@ export const schemaMessage = z
 
 export type Message = z.infer<typeof schemaMessage>;
 
-export const VariableSchema = z.object({
+export let VariableSchema = z.object({
 	name: z.string(),
 	value: z.string()
 });
 
-export const VariablesSchema = z.array(VariableSchema).default([]);
+export let VariablesSchema = z.array(VariableSchema).default([]);
 
 export type VariablesI = z.infer<typeof VariablesSchema>;
 export type VariableI = z.infer<typeof VariableSchema>;
@@ -154,9 +154,9 @@ export interface ToolCall {
 	};
 }
 
-const functionNameRegex = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+let functionNameRegex = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
 
-export const toolChoiceSchema = z
+export let toolChoiceSchema = z
 	.object({
 		type: z.enum(['function']).default('function'),
 		function: z.object({
