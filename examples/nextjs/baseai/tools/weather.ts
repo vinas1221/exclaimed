@@ -1,8 +1,8 @@
-const getWeather = ({location}: {location: string}) => {
+let getWeather = ({location}: {location: string}) => {
 	return `Weather of ${location} is 16`;
 };
 
-const toolGetWeather = () => ({
+let toolGetWeather = () => ({
 	run: getWeather,
 	type: 'function',
 	function: {
