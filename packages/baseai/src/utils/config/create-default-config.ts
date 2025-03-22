@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { defaultConfig } from './config-handler';
 
-const configDir = path.join(process.cwd(), 'baseai');
-const configFilePath = path.join(configDir, 'baseai.config.ts');
+let configDir = path.join(process.cwd(), 'baseai');
+let configFilePath = path.join(configDir, 'baseai.config.ts');
 
 // Function to check and create the default config if it doesn't exist
 export async function createDefaultConfig() {
@@ -21,9 +21,9 @@ export async function createDefaultConfig() {
 		await fs.promises.mkdir(configDir, { recursive: true });
 
 		// Default content for the config file (you can adjust this)
-		const configContent = `import type {BaseAIConfig} from '@baseai/core';
+		let configContent = `import type {BaseAIConfig} from '@baseai/core';
 
-		export const config: BaseAIConfig = ${JSON.stringify(defaultConfig, null, 2)};
+		export let config: BaseAIConfig = ${JSON.stringify(defaultConfig, null, 2)};
 		`;
 
 		// Write the default config to baseai.config.ts
