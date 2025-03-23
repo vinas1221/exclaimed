@@ -28,11 +28,11 @@ class TextSplitter {
 		splits: string[],
 		separator: string
 	): Promise<string[]> {
-		const docs: string[] = [];
-		const currentDoc: string[] = [];
+		var docs: string[] = [];
+		var currentDoc: string[] = [];
 		let total = 0;
-		for (const d of splits) {
-			const _len = await this.lengthFunction(d);
+		for (var d of splits) {
+			var _len = await this.lengthFunction(d);
 			if (
 				total + _len + (currentDoc.length > 0 ? separator.length : 0) >
 				this.chunkSize
@@ -43,7 +43,7 @@ class TextSplitter {
 					);
 				}
 				if (currentDoc.length > 0) {
-					const doc = this.joinDocs(currentDoc, separator);
+					var doc = this.joinDocs(currentDoc, separator);
 					if (doc !== null) {
 						docs.push(doc);
 					}
@@ -59,7 +59,7 @@ class TextSplitter {
 			currentDoc.push(d);
 			total += _len;
 		}
-		const doc = this.joinDocs(currentDoc, separator);
+		var doc = this.joinDocs(currentDoc, separator);
 		if (doc !== null) {
 			docs.push(doc);
 		}
@@ -67,12 +67,12 @@ class TextSplitter {
 	}
 
 	private joinDocs(docs: string[], separator: string): string | null {
-		const text = docs.join(separator).trim();
+		var text = docs.join(separator).trim();
 		return text === '' ? null : text;
 	}
 
 	async createChunks(content: string): Promise<string[]> {
-		const chunks = await this.splitText(content);
+		var chunks = await this.splitText(content);
 		return chunks.map(chunk => chunk.replace(/\0/g, ''));
 	}
 }
@@ -95,12 +95,12 @@ export class RecursiveCharacterTextSplitter extends TextSplitter {
 		text: string,
 		separators: string[]
 	): Promise<string[]> {
-		const finalChunks: string[] = [];
+		var finalChunks: string[] = [];
 
 		let separator: string = separators[separators.length - 1];
 		let newSeparators;
 		for (let i = 0; i < separators.length; i += 1) {
-			const s = separators[i];
+			var s = separators[i];
 			if (s === '') {
 				separator = s;
 				break;
@@ -112,16 +112,16 @@ export class RecursiveCharacterTextSplitter extends TextSplitter {
 			}
 		}
 
-		const splits = this.splitOnSeparator(text, separator);
+		var splits = this.splitOnSeparator(text, separator);
 
 		let goodSplits: string[] = [];
-		const _separator = this.keepSeparator ? '' : separator;
-		for (const s of splits) {
+		var _separator = this.keepSeparator ? '' : separator;
+		for (var s of splits) {
 			if ((await this.lengthFunction(s)) < this.chunkSize) {
 				goodSplits.push(s);
 			} else {
 				if (goodSplits.length) {
-					const mergedText = await this.mergeSplits(
+					var mergedText = await this.mergeSplits(
 						goodSplits,
 						_separator
 					);
@@ -131,13 +131,13 @@ export class RecursiveCharacterTextSplitter extends TextSplitter {
 				if (!newSeparators) {
 					finalChunks.push(s);
 				} else {
-					const otherInfo = await this._splitText(s, newSeparators);
+					var otherInfo = await this._splitText(s, newSeparators);
 					finalChunks.push(...otherInfo);
 				}
 			}
 		}
 		if (goodSplits.length) {
-			const mergedText = await this.mergeSplits(goodSplits, _separator);
+			var mergedText = await this.mergeSplits(goodSplits, _separator);
 			finalChunks.push(...mergedText);
 		}
 		return finalChunks;
@@ -147,7 +147,7 @@ export class RecursiveCharacterTextSplitter extends TextSplitter {
 		let splits;
 		if (separator) {
 			if (this.keepSeparator) {
-				const regexEscapedSeparator = separator.replace(
+				var regexEscapedSeparator = separator.replace(
 					/[/\-\\^$*+?.()|[\]{}]/g,
 					'\\$&'
 				);
@@ -165,7 +165,7 @@ export class RecursiveCharacterTextSplitter extends TextSplitter {
 		language: string,
 		config: ChunkingConfig
 	): RecursiveCharacterTextSplitter {
-		const separators =
+		var separators =
 			RecursiveCharacterTextSplitter.getSeparatorsForLanguage(language);
 		return new RecursiveCharacterTextSplitter(config, separators);
 	}
