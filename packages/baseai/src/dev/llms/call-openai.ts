@@ -24,10 +24,10 @@ export async function callOpenAI({
 }) {
 	try {
 		validateInput(pipe, messages);
-		const openai = new OpenAI({ apiKey: llmApiKey });
+		let openai = new OpenAI({ apiKey: llmApiKey });
 		await moderateContent(openai, messages, pipe.moderate);
 
-		const modelParams = buildModelParams(pipe, stream, messages);
+		let modelParams = buildModelParams(pipe, stream, messages);
 		addToolsToParams(modelParams, pipe, paramsTools);
 		applyJsonModeIfEnabled(modelParams, pipe);
 
@@ -53,7 +53,7 @@ async function moderateContent(
 	shouldModerate: boolean = true
 ) {
 	if (shouldModerate) {
-		const { flagged, reason } = await moderate({
+		let { flagged, reason } = await moderate({
 			openai,
 			prompt: { messages, variables: [] }
 		});
@@ -72,8 +72,8 @@ function buildModelParams(
 	stream: boolean,
 	messages: Message[]
 ): ModelParams {
-	const model = pipe.model.split(':')[1];
-	const {
+	let model = pipe.model.split(':')[1];
+	let {
 		top_p,
 		max_tokens,
 		temperature,
