@@ -1,3 +1,3 @@
-export const MOBILE_BREAKPOINT = 768;
+export let MOBILE_BREAKPOINT = 768;
 
-export const BASE_URL = 'https://baseai.dev';
+export let BASE_URL = 'https://baseai.dev';
