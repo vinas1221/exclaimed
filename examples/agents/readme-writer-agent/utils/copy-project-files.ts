@@ -4,11 +4,11 @@ import {execAsync} from './exec-sync';
 import {handleError} from './handle-error';
 
 export async function copyProjectFiles({dirName}: {dirName: string}) {
-	const spinner = p.spinner();
+	let spinner = p.spinner();
 	spinner.start('Copying project files...');
 
-	const source = process.cwd();
-	const destination = path.join(
+	let source = process.cwd();
+	let destination = path.join(
 		dirName,
 		'baseai',
 		'memory',
