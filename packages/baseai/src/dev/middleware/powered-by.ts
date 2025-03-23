@@ -1,6 +1,6 @@
 import type { MiddlewareHandler } from 'hono';
 
-export const poweredBy = (): MiddlewareHandler => {
+export let poweredBy = (): MiddlewareHandler => {
 	return async function poweredBy(c, next) {
 		await next();
 		c.res.headers.set('lb-powered-by', 'Langbase');
