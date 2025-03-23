@@ -1,10 +1,10 @@
 import type { MiddlewareHandler } from 'hono';
 import { dlog } from '../utils/dlog';
 
-export const debugBase = (): MiddlewareHandler => {
+export let debugBase = (): MiddlewareHandler => {
 	return async function debugUrl(c, next) {
-		const url = new URL(c.req.url);
-		const path = url.pathname;
+		let url = new URL(c.req.url);
+		let path = url.pathname;
 
 		dlog('API HIT', {
 			url: c.req.url,
@@ -14,7 +14,7 @@ export const debugBase = (): MiddlewareHandler => {
 
 		if (c.req.method.toUpperCase() === 'POST') {
 			try {
-				const req = await c.req.json();
+				let req = await c.req.json();
 				dlog('REQUEST BODY', req);
 			} catch (error) {
 				dlog('ERROR PARSING REQUEST BODY', error);
