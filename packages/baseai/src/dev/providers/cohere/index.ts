@@ -6,7 +6,7 @@ import {
 	CohereChatCompleteStreamChunkTransform
 } from './chatComplete';
 
-const CohereConfig: ProviderConfigs = {
+let CohereConfig: ProviderConfigs = {
 	chatComplete: CohereChatCompleteConfig,
 	api: CohereAPIConfig,
 	responseTransforms: {
