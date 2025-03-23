@@ -10,25 +10,25 @@ export async function saveDeployedCommitHashInMemoryConfig({
 	deployedCommitHash: string;
 }): Promise<void> {
 	try {
-		const memoryDir = path.join(
+		var memoryDir = path.join(
 			process.cwd(),
 			'baseai',
 			'memory',
 			memoryName
 		);
-		const indexFilePath = path.join(memoryDir, 'index.ts');
+		var indexFilePath = path.join(memoryDir, 'index.ts');
 		let fileContents = await fs.readFile(indexFilePath, 'utf-8');
 
 		// Check if the git block exists
 		if (fileContents.includes('git:')) {
 			// Find the git block including its indentation
-			const gitBlockMatch = fileContents.match(/(\t*)git:\s*{[^}]*?}/);
+			var gitBlockMatch = fileContents.match(/(\t*)git:\s*{[^}]*?}/);
 			if (gitBlockMatch) {
-				const [fullMatch, outerIndent] = gitBlockMatch;
-				const innerIndent = outerIndent + '\t';
+				var [fullMatch, outerIndent] = gitBlockMatch;
+				var innerIndent = outerIndent + '\t';
 
 				// Parse existing content
-				const contentMatch = fullMatch.match(
+				var contentMatch = fullMatch.match(
 					/{\s*\n?\s*(.*?)\s*\n?\s*}/s
 				);
 				let existingContent = contentMatch ? contentMatch[1] : '';
@@ -56,7 +56,7 @@ export async function saveDeployedCommitHashInMemoryConfig({
 				// Add commas between lines but not after the last line
 				newGitContent = contentLines
 					.map((line, index) => {
-						const isLast = index === contentLines.length - 1;
+						var isLast = index === contentLines.length - 1;
 						return `${innerIndent}${line}${isLast ? '' : ','}`;
 					})
 					.join('\n');
@@ -69,32 +69,32 @@ export async function saveDeployedCommitHashInMemoryConfig({
 			}
 		} else {
 			// Add new git config block
-			const match = fileContents.match(
-				/(?:const\s+\w+\s*=\s*\(\s*\)\s*(?::\s*\w+)?\s*=>\s*\({[\s\S]*?)(}\))/
+			var match = fileContents.match(
+				/(?:var\s+\w+\s*=\s*\(\s*\)\s*(?::\s*\w+)?\s*=>\s*\({[\s\S]*?)(}\))/
 			);
 
 			if (match) {
 				// Insert before the closing parenthesis
-				const insertPosition =
+				var insertPosition =
 					match.index! + match[0].length - match[1].length;
-				const prefix = fileContents.slice(0, insertPosition);
-				const suffix = fileContents.slice(insertPosition);
+				var prefix = fileContents.slice(0, insertPosition);
+				var suffix = fileContents.slice(insertPosition);
 
 				// Match the indentation of nearby properties
-				const indentMatch = prefix.match(/\n(\t+)[^\n]+\n\s*$/);
-				const baseIndent = indentMatch ? indentMatch[1] : '\t';
-				const innerIndent = baseIndent + '\t';
+				var indentMatch = prefix.match(/\n(\t+)[^\n]+\n\s*$/);
+				var baseIndent = indentMatch ? indentMatch[1] : '\t';
+				var innerIndent = baseIndent + '\t';
 
-				const lines = [
+				var lines = [
 					'enabled: false',
 					"include: ['**/*']",
 					'gitignore: false',
 					`deployedAt: '${deployedCommitHash}'`
 				];
 
-				const gitConfig = lines
+				var gitConfig = lines
 					.map((line, index) => {
-						const isLast = index === lines.length - 1;
+						var isLast = index === lines.length - 1;
 						return `${innerIndent}${line}${isLast ? '' : ','}`;
 					})
 					.join('\n');
