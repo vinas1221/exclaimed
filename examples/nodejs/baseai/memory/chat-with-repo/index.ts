@@ -1,6 +1,6 @@
 import {MemoryI} from '@baseai/core';
 
-const memoryChatWithRepo = (): MemoryI => ({
+let memoryChatWithRepo = (): MemoryI => ({
 	name: 'chat-with-repo',
 	description: '',
 	git: {
