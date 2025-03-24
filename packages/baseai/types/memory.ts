@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const memoryNameSchema = z
+export let memoryNameSchema = z
 	.string()
 	.min(3, 'Memory name must be at least 3 characters long')
 	.max(50, 'Memory name must not exceed 50 characters')
@@ -9,14 +9,14 @@ export const memoryNameSchema = z
 		'Memory name can only contain letters, numbers, dots, and hyphens'
 	);
 
-export const docNameSchema = z.string().trim().min(1);
+export let docNameSchema = z.string().trim().min(1);
 
-export const memoryDocSchema = z.object({
+export let memoryDocSchema = z.object({
 	memoryName: memoryNameSchema,
 	documentName: docNameSchema
 });
 
-export const gitConfigSchema = z.object({
+export let gitConfigSchema = z.object({
 	enabled: z.boolean(),
 	include: z
 		.array(z.string().trim().min(1, 'Include pattern must not be empty'))
@@ -27,7 +27,7 @@ export const gitConfigSchema = z.object({
 	embeddedAt: z.string().trim().optional().default('')
 });
 
-export const documentSchema = z.object({
+export let documentSchema = z.object({
 	meta: z
 		.function()
 		.args(
@@ -43,7 +43,7 @@ export const documentSchema = z.object({
 		.optional()
 });
 
-export const memoryConfigSchema = z.object({
+export let memoryConfigSchema = z.object({
 	name: z.string(),
 	description: z.string().optional(),
 	git: gitConfigSchema,
