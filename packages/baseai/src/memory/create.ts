@@ -12,30 +12,30 @@ import { fromZodError } from 'zod-validation-error';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
-let execAsync = promisify(exec);
+const execAsync = promisify(exec);
 
-let defaultConfig = {
+const defaultConfig = {
 	name: 'ai-agent-memory',
 	description: 'My list of docs as memory for an AI agent pipe'
 };
 
-let MEMORY_CONSTANTS = {
+const MEMORY_CONSTANTS = {
 	documentsDir: 'documents'
 };
 
 export async function createMemory() {
 	p.intro(heading({ text: 'MEMORY', sub: 'Create a new memory' }));
 
-	let memoryInfo = await p.group(
+	const memoryInfo = await p.group(
 		{
 			name: () =>
 				p.text({
 					message: 'Name of the memory',
 					placeholder: defaultConfig.name,
 					validate: value => {
-						let validatedName = memoryNameSchema.safeParse(value);
+						const validatedName = memoryNameSchema.safeParse(value);
 						if (!validatedName.success) {
-							let validationError = fromZodError(
+							const validationError = fromZodError(
 								validatedName.error
 							).toString();
 							return validationError;
@@ -63,12 +63,12 @@ export async function createMemory() {
 		}
 	);
 
-	let memoryNameSlugified = slugify(memoryInfo.name);
-	let memoryNameCamelCase = camelCase('memory-' + memoryNameSlugified);
-	let baseDir = path.join(process.cwd(), 'baseai', 'memory');
-	let memoryDir = path.join(baseDir, memoryNameSlugified);
-	let filePath = path.join(memoryDir, 'index.ts');
-	let dbDir = path.join(process.cwd(), '.baseai', 'db');
+	const memoryNameSlugified = slugify(memoryInfo.name);
+	const memoryNameCamelCase = camelCase('memory-' + memoryNameSlugified);
+	const baseDir = path.join(process.cwd(), 'baseai', 'memory');
+	const memoryDir = path.join(baseDir, memoryNameSlugified);
+	const filePath = path.join(memoryDir, 'index.ts');
+	const dbDir = path.join(process.cwd(), '.baseai', 'db');
 
 	if (memoryInfo.useGit) {
 		try {
@@ -79,9 +79,9 @@ export async function createMemory() {
 		}
 	}
 
-	let memoryContent = `import {MemoryI} from '@baseai/core';
+	const memoryContent = `import {MemoryI} from '@baseai/core';
 
-let ${memoryNameCamelCase} = (): MemoryI => ({
+const ${memoryNameCamelCase} = (): MemoryI => ({
 	name: '${memoryNameSlugified}',
 	description: ${JSON.stringify(memoryInfo.description || '')},
 	git: {
@@ -108,7 +108,7 @@ export default ${memoryNameCamelCase};`;
 		await fs.promises.mkdir(dbDir, { recursive: true });
 
 		if (!memoryInfo.useGit) {
-			let memoryDocumentsPath = path.join(
+			const memoryDocumentsPath = path.join(
 				memoryDir,
 				MEMORY_CONSTANTS.documentsDir
 			);
