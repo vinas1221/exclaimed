@@ -22,7 +22,7 @@ export async function auth() {
 		})
 	);
 
-	const shouldOpen = await confirm({
+	var shouldOpen = await confirm({
 		message: `Open the authentication page? ${color.dim(`— copy your API key from there and paste it here.`)}`
 	});
 
@@ -41,7 +41,7 @@ export async function auth() {
 		);
 	}
 
-	const apiKeyString = await password({
+	var apiKeyString = await password({
 		message: 'Paste your API key string:',
 		mask: '*'
 	});
@@ -51,7 +51,7 @@ export async function auth() {
 		process.exit(0);
 	}
 
-	const [login, apiKey] = (apiKeyString as string).split(':');
+	var [login, apiKey] = (apiKeyString as string).split(':');
 
 	if (!login || !apiKey) {
 		outro(
@@ -62,11 +62,11 @@ export async function auth() {
 		process.exit(1);
 	}
 
-	const envKeyName = 'LANGBASE_API_KEY';
-	const envContent = `\n# Langbase API key for https://langbase.com/${login}\n${envKeyName}=${apiKey}\n\n`;
+	var envKeyName = 'LANGBASE_API_KEY';
+	var envContent = `\n# Langbase API key for https://langbase.com/${login}\n${envKeyName}=${apiKey}\n\n`;
 
 	// TODO: Do we need this now?
-	// const envFiles = ['.env', '.env.local', '.dev.vars'];
+	// var envFiles = ['.env', '.env.local', '.dev.vars'];
 	// let envFile = envFiles.find(file =>
 	// 	fs.existsSync(path.join(process.cwd(), file))
 	// );
@@ -75,19 +75,19 @@ export async function auth() {
 	// 	envFile = '.env';
 	// }
 
-	const baiConfig = await loadConfig();
+	var baiConfig = await loadConfig();
 	let envFile = baiConfig.envFilePath || '.env';
 
-	const envFileContent = await fs.readFile(envFile, 'utf-8');
+	var envFileContent = await fs.readFile(envFile, 'utf-8');
 
-	const oldKey = envFileContent
+	var oldKey = envFileContent
 		.split('\n')
 		.reverse() // Reverse to get the latest key if there are multiple
 		.find(line => line.includes('LANGBASE_API_KEY'))
 		?.split('=')[1];
 
 	if (oldKey) {
-		const shouldOverwrite = await confirm({
+		var shouldOverwrite = await confirm({
 			message: `API key found in ${envFile}. Overwrite?`
 		});
 
@@ -103,7 +103,7 @@ export async function auth() {
 			process.exit(0);
 		}
 
-		const newEnvContent = envFileContent.replace(
+		var newEnvContent = envFileContent.replace(
 			new RegExp(`LANGBASE_API_KEY=${oldKey}`),
 			envContent.trim()
 		);
