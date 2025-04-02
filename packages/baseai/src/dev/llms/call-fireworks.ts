@@ -19,10 +19,10 @@ export async function callFireworks({
 	messages: Message[];
 }) {
 	try {
-		let modelParams = buildModelParams(pipe, stream, messages);
+		const modelParams = buildModelParams(pipe, stream, messages);
 
 		// Transform params according to provider's format
-		let transformedRequestParams = transformToProviderRequest({
+		const transformedRequestParams = transformToProviderRequest({
 			provider: FIREWORKS_AI,
 			params: modelParams,
 			fn: 'chatComplete'
@@ -33,7 +33,7 @@ export async function callFireworks({
 		if (modelParams?.model === 'llama-v3p1-405b-instruct')
 			delete transformedRequestParams['stop'];
 
-		let providerOptions = { provider: FIREWORKS_AI, llmApiKey };
+		const providerOptions = { provider: FIREWORKS_AI, llmApiKey };
 
 		return await handleProviderRequest({
 			providerOptions,
@@ -52,12 +52,12 @@ function buildModelParams(
 	messages: Message[]
 ): ModelParams {
 	// Create model strings for Fireworks AI
-	let pipeModel = pipe.model.split(':')[1];
-	let model =
+	const pipeModel = pipe.model.split(':')[1];
+	const model =
 		pipeModel === 'yi-large'
 			? 'accounts/yi-01-ai/models/yi-large'
 			: `accounts/fireworks/models/${pipeModel}`;
-	let {
+	const {
 		top_p,
 		max_tokens,
 		temperature,
