@@ -3,13 +3,13 @@ import {NextRequest} from 'next/server';
 import pipeWithMemory from '../../../../../baseai/pipes/pipe-with-memory';
 
 export async function POST(req: NextRequest) {
-	const runOptions = await req.json();
+	let runOptions = await req.json();
 
 	// 1. Initiate the Pipe.
-	const pipe = new Pipe(pipeWithMemory());
+	let pipe = new Pipe(pipeWithMemory());
 
 	// 2. Run the pipe with user messages and other run options.
-	const {stream} = await pipe.run(runOptions);
+	let {stream} = await pipe.run(runOptions);
 
 	// 3. Return the ReadableStream directly.
 	return new Response(stream, {
