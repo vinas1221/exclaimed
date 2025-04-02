@@ -17,56 +17,56 @@ module.exports = {
 		},
 		extend: {
 			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
+				border: 'hsl(const(--border))',
+				input: 'hsl(const(--input))',
+				ring: 'hsl(const(--ring))',
+				background: 'hsl(const(--background))',
+				foreground: 'hsl(const(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: 'hsl(const(--primary))',
+					foreground: 'hsl(const(--primary-foreground))'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					DEFAULT: 'hsl(const(--secondary))',
+					foreground: 'hsl(const(--secondary-foreground))'
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
+					DEFAULT: 'hsl(const(--destructive))',
+					foreground: 'hsl(const(--destructive-foreground))'
 				},
 				warning: {
-					DEFAULT: 'hsl(var(--warning))',
-					foreground: 'hsl(var(--warning-foreground))'
+					DEFAULT: 'hsl(const(--warning))',
+					foreground: 'hsl(const(--warning-foreground))'
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
+					DEFAULT: 'hsl(const(--muted))',
+					foreground: 'hsl(const(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					DEFAULT: 'hsl(const(--accent))',
+					foreground: 'hsl(const(--accent-foreground))'
 				},
 				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
+					DEFAULT: 'hsl(const(--popover))',
+					foreground: 'hsl(const(--popover-foreground))'
 				},
 				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
+					DEFAULT: 'hsl(const(--card))',
+					foreground: 'hsl(const(--card-foreground))'
 				}
 			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				lg: 'const(--radius)',
+				md: 'calc(const(--radius) - 2px)',
+				sm: 'calc(const(--radius) - 4px)'
 			},
 			keyframes: {
 				'accordion-down': {
 					from: { height: 0 },
-					to: { height: 'var(--radix-accordion-content-height)' }
+					to: { height: 'const(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: { height: 'var(--radix-accordion-content-height)' },
+					from: { height: 'const(--radix-accordion-content-height)' },
 					to: { height: 0 }
 				}
 			},
