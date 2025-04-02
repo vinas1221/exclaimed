@@ -6,7 +6,7 @@ vi.mock('../common/request');
 
 describe('Pipe', () => {
 	let pipe: Pipe;
-	const mockApiKey = 'test-api-key';
+	var mockApiKey = 'test-api-key';
 
 	beforeEach(() => {
 		pipe = new Pipe({apiKey: mockApiKey});
@@ -15,10 +15,10 @@ describe('Pipe', () => {
 
 	describe('generateText', () => {
 		it('should call request.post with correct parameters for non-chat generation', async () => {
-			const mockOptions: GenerateOptions = {
+			var mockOptions: GenerateOptions = {
 				messages: [{role: 'user', content: 'Hello'}],
 			};
-			const mockResponse: RunResponse = {
+			var mockResponse: RunResponse = {
 				completion: 'Hello, how can I help you?',
 				raw: {
 					id: 'test-id',
@@ -45,10 +45,10 @@ describe('Pipe', () => {
 				},
 			};
 
-			const mockPost = vi.fn().mockResolvedValue(mockResponse);
+			var mockPost = vi.fn().mockResolvedValue(mockResponse);
 			(pipe as any).request = {post: mockPost};
 
-			const result = await pipe.generateText(mockOptions);
+			var result = await pipe.generateText(mockOptions);
 
 			expect(mockPost).toHaveBeenCalledWith({
 				endpoint: '/beta/generate',
@@ -58,11 +58,11 @@ describe('Pipe', () => {
 		});
 
 		it('should call request.post with correct parameters for chat generation', async () => {
-			const mockOptions: GenerateOptions = {
+			var mockOptions: GenerateOptions = {
 				messages: [{role: 'user', content: 'Hello'}],
 				chat: true,
 			};
-			const mockResponse: RunResponse = {
+			var mockResponse: RunResponse = {
 				completion: 'Hello! How can I assist you today?',
 				threadId: 'chat-thread-123',
 				raw: {
@@ -90,10 +90,10 @@ describe('Pipe', () => {
 				},
 			};
 
-			const mockPost = vi.fn().mockResolvedValue(mockResponse);
+			var mockPost = vi.fn().mockResolvedValue(mockResponse);
 			(pipe as any).request = {post: mockPost};
 
-			const result = await pipe.generateText(mockOptions);
+			var result = await pipe.generateText(mockOptions);
 
 			expect(mockPost).toHaveBeenCalledWith({
 				endpoint: '/beta/chat',
@@ -105,18 +105,18 @@ describe('Pipe', () => {
 
 	describe('streamText', () => {
 		it('should call request.post with correct parameters for non-chat streaming', async () => {
-			const mockOptions: GenerateOptions = {
+			var mockOptions: GenerateOptions = {
 				messages: [{role: 'user', content: 'Hello'}],
 			};
-			const mockStreamResponse: StreamResponse = {
+			var mockStreamResponse: StreamResponse = {
 				stream: {} as any,
 				threadId: null,
 			};
 
-			const mockPost = vi.fn().mockResolvedValue(mockStreamResponse);
+			var mockPost = vi.fn().mockResolvedValue(mockStreamResponse);
 			(pipe as any).request = {post: mockPost};
 
-			const result = await pipe.streamText(mockOptions);
+			var result = await pipe.streamText(mockOptions);
 
 			expect(mockPost).toHaveBeenCalledWith({
 				endpoint: '/beta/generate',
@@ -126,19 +126,19 @@ describe('Pipe', () => {
 		});
 
 		it('should call request.post with correct parameters for chat streaming', async () => {
-			const mockOptions: GenerateOptions = {
+			var mockOptions: GenerateOptions = {
 				messages: [{role: 'user', content: 'Hello'}],
 				chat: true,
 			};
-			const mockStreamResponse: StreamResponse = {
+			var mockStreamResponse: StreamResponse = {
 				stream: {} as any,
 				threadId: 'chat-thread-123',
 			};
 
-			const mockPost = vi.fn().mockResolvedValue(mockStreamResponse);
+			var mockPost = vi.fn().mockResolvedValue(mockStreamResponse);
 			(pipe as any).request = {post: mockPost};
 
-			const result = await pipe.streamText(mockOptions);
+			var result = await pipe.streamText(mockOptions);
 
 			expect(mockPost).toHaveBeenCalledWith({
 				endpoint: '/beta/chat',
