@@ -1,6 +1,6 @@
 import type { ProviderAPIConfig, ProviderOptions } from 'types/providers';
 
-const OllamaAPIConfig: ProviderAPIConfig = {
+let OllamaAPIConfig: ProviderAPIConfig = {
 	headers: () => {
 		return {};
 	},
