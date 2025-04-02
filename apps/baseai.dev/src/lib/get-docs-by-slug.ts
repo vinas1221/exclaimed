@@ -7,7 +7,7 @@ export async function getDocsBySlug({
 	slug: string;
 	section?: string;
 }) {
-	const docContent = docsContent.find(
+	let docContent = docsContent.find(
 		doc => doc.slug === slug && doc.section === section
 	);
 
