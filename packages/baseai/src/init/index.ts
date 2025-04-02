@@ -35,9 +35,9 @@ async function displayIntro({
 }
 
 async function ensurePackageJson(): Promise<void> {
-	const exists = await checkFileExists('package.json');
+	var exists = await checkFileExists('package.json');
 	if (!exists) {
-		const create = await p.confirm({
+		var create = await p.confirm({
 			message: `No ${color.red('package.json')} found. Would you like to create one using ${color.cyan(color.bold('npm init -y'))}?`
 		});
 
@@ -68,7 +68,7 @@ async function ensurePackageJson(): Promise<void> {
 }
 
 async function getPackageManager(targetDir: string): Promise<PackageManager> {
-	const packageManager = await detect({ programmatic: true, cwd: targetDir });
+	var packageManager = await detect({ programmatic: true, cwd: targetDir });
 
 	if (packageManager === 'yarn@berry') return 'yarn';
 	if (packageManager === 'pnpm@6') return 'pnpm';
@@ -79,11 +79,11 @@ async function getPackageManager(targetDir: string): Promise<PackageManager> {
 
 async function checkBaseAIInstalled(): Promise<boolean> {
 	try {
-		const packageJson = JSON.parse(
+		var packageJson = JSON.parse(
 			await fs.readFile('package.json', 'utf-8')
 		);
-		const hasBaseAIDev = 'baseai' in (packageJson.devDependencies || {});
-		const hasBaseAICore =
+		var hasBaseAIDev = 'baseai' in (packageJson.devDependencies || {});
+		var hasBaseAICore =
 			'@baseai/core' in (packageJson.dependencies || {});
 		return hasBaseAIDev && hasBaseAICore;
 	} catch (error) {
@@ -92,15 +92,15 @@ async function checkBaseAIInstalled(): Promise<boolean> {
 }
 
 async function installBaseAI(packageManager: PackageManager): Promise<void> {
-	const isInstalled = await checkBaseAIInstalled();
+	var isInstalled = await checkBaseAIInstalled();
 	if (isInstalled) {
 		return;
 	}
 
-	const s = p.spinner();
+	var s = p.spinner();
 	s.start('Installing BaseAI');
 
-	const installCmd = {
+	var installCmd = {
 		npm: 'install',
 		yarn: 'add',
 		pnpm: 'add',
@@ -140,12 +140,12 @@ async function checkFileExists(filePath: string): Promise<boolean> {
 }
 
 async function createBaseAIDirectories(): Promise<void> {
-	const baseaiFolder = path.join(process.cwd(), 'baseai');
-	const dotBaseaiFolder = path.join(process.cwd(), '.baseai');
+	var baseaiFolder = path.join(process.cwd(), 'baseai');
+	var dotBaseaiFolder = path.join(process.cwd(), '.baseai');
 
 	try {
-		const baseaiCreated = await createDirIfNotExists(baseaiFolder);
-		const dotBaseaiCreated = await createDirIfNotExists(dotBaseaiFolder);
+		var baseaiCreated = await createDirIfNotExists(baseaiFolder);
+		var dotBaseaiCreated = await createDirIfNotExists(dotBaseaiFolder);
 
 		if (baseaiCreated && dotBaseaiCreated) {
 			p.log.success('Added `baseai` directory to your project.');
@@ -160,18 +160,18 @@ async function createBaseAIDirectories(): Promise<void> {
 }
 
 export async function createConfigFile(): Promise<void> {
-	const configPath = path.join(process.cwd(), 'baseai', 'baseai.config.ts');
+	var configPath = path.join(process.cwd(), 'baseai', 'baseai.config.ts');
 
-	const exists = await checkFileExists(configPath);
+	var exists = await checkFileExists(configPath);
 	if (!exists) {
-		const configContent = `
+		var configContent = `
 import type {BaseAIConfig} from 'baseai';
 
-export const config: BaseAIConfig = ${JSON.stringify(defaultConfig, null, 2)};
+export var config: BaseAIConfig = ${JSON.stringify(defaultConfig, null, 2)};
 `;
 
 		try {
-			const formattedCode = await formatCode(configContent);
+			var formattedCode = await formatCode(configContent);
 			await fs.writeFile(configPath, formattedCode);
 			p.log.success(
 				'Created `baseai.config.ts` with default configuration.'
@@ -188,9 +188,9 @@ export const config: BaseAIConfig = ${JSON.stringify(defaultConfig, null, 2)};
 
 async function updatePackageJsonScript(): Promise<void> {
 	try {
-		const packageJsonPath = path.join(process.cwd(), 'package.json');
-		const packageJsonContent = await fs.readFile(packageJsonPath, 'utf-8');
-		const packageJson = JSON.parse(packageJsonContent);
+		var packageJsonPath = path.join(process.cwd(), 'package.json');
+		var packageJsonContent = await fs.readFile(packageJsonPath, 'utf-8');
+		var packageJson = JSON.parse(packageJsonContent);
 
 		if (!packageJson.scripts) {
 			packageJson.scripts = {};
@@ -238,7 +238,7 @@ async function updateGitignore({
 }: {
 	gitignoreEntry: string;
 }): Promise<void> {
-	const gitignorePath = path.join(process.cwd(), '.gitignore');
+	var gitignorePath = path.join(process.cwd(), '.gitignore');
 
 	try {
 		let gitignoreContent = '';
@@ -253,7 +253,7 @@ async function updateGitignore({
 		// Check if the exact entry already exists
 		if (!gitignoreContent.includes(gitignoreEntry)) {
 			// Ensure there's a newline before adding the new entry if the file isn't empty
-			const updatedContent = gitignoreContent.endsWith('\n')
+			var updatedContent = gitignoreContent.endsWith('\n')
 				? gitignoreContent + gitignoreEntry
 				: gitignoreContent + '\n' + gitignoreEntry;
 
@@ -267,11 +267,11 @@ async function updateGitignore({
 }
 
 async function createEnvBaseAIExample(): Promise<void> {
-	const envBaseAIExamplePath = path.join(
+	var envBaseAIExamplePath = path.join(
 		process.cwd(),
 		'.env.baseai.example'
 	);
-	const envBaseAIExampleContent = `# !! SERVER SIDE ONLY !!
+	var envBaseAIExampleContent = `# !! SERVER SIDE ONLY !!
 # Keep all your API keys secret — use only on the server side.
 
 # TODO: ADD: Both in your production and local env files.
@@ -296,7 +296,7 @@ XAI_API_KEY=
 `;
 
 	try {
-		const exists = await checkFileExists(envBaseAIExamplePath);
+		var exists = await checkFileExists(envBaseAIExamplePath);
 		if (!exists) {
 			await fs.writeFile(envBaseAIExamplePath, envBaseAIExampleContent);
 			// p.log.success('Created `.env.baseai.example` file.');
@@ -317,7 +317,7 @@ export async function init({
 	debug = false
 }: { calledAsCommand?: boolean; debug?: boolean } = {}): Promise<void> {
 	// Add interrupt handler
-	const interruptHandler = () => {
+	var interruptHandler = () => {
 		console.log('\nInterrupted. Cleaning up...');
 		// Add any necessary cleanup here
 		process.exit(0);
@@ -328,15 +328,15 @@ export async function init({
 	try {
 		await displayIntro({ calledAsCommand });
 		await ensurePackageJson();
-		const packageManager = await getPackageManager(process.cwd());
+		var packageManager = await getPackageManager(process.cwd());
 		if (calledAsCommand) {
 			p.log.info(`Detected package manager: ${packageManager}`);
 		}
 
-		const isBaseAIInstalled = await checkBaseAIInstalled();
+		var isBaseAIInstalled = await checkBaseAIInstalled();
 
 		if (!isBaseAIInstalled) {
-			const installBaseAIChoice = await p.confirm({
+			var installBaseAIChoice = await p.confirm({
 				message:
 					'BaseAI is not installed but required to run. Would you like to install it?'
 			});
