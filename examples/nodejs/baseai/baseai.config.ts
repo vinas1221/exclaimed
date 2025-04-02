@@ -1,6 +1,6 @@
 import type {BaseAIConfig} from 'baseai';
 
-export const config: BaseAIConfig = {
+export let config: BaseAIConfig = {
 	log: {
 		isEnabled: true,
 		logSensitiveData: false,
