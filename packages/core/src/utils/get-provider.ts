@@ -30,7 +30,7 @@ type Provider =
  * @throws Error if the provider is unknown.
  */
 export function getProvider(providerString: string): Provider {
-	const providerMap: {[key: string]: Provider} = {
+	let providerMap: {[key: string]: Provider} = {
 		openai: OPEN_AI,
 		anthropic: ANTHROPIC,
 		together: TOGETHER_AI,
@@ -44,7 +44,7 @@ export function getProvider(providerString: string): Provider {
 		mistral: MISTRAL_AI,
 	};
 
-	const provider = providerMap[providerString.toLowerCase()];
+	let provider = providerMap[providerString.toLowerCase()];
 	if (!provider) {
 		throw new Error(`Unknown provider: ${providerString}`);
 	}
