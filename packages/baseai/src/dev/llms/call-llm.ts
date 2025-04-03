@@ -46,18 +46,18 @@ export async function callLLM({
 }) {
 	try {
 		// Get the model provider from the pipe.
-		const providerString = pipe.model.split(':')[0];
-		const modelProvider = getProvider(providerString);
+		let providerString = pipe.model.split(':')[0];
+		let modelProvider = getProvider(providerString);
 
-		const memoryNames = pipe.memory.map(memory => memory.name);
+		let memoryNames = pipe.memory.map(memory => memory.name);
 
-		const similarChunks = await addContextFromMemory({
+		let similarChunks = await addContextFromMemory({
 			messages,
 			memoryNames
 		});
 
 		// Process the messages to be sent to the model provider.
-		const messagesThread = getRunThread({
+		let messagesThread = getRunThread({
 			pipe,
 			messages,
 			similarChunks,
