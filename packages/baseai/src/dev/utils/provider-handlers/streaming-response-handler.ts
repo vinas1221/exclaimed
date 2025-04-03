@@ -15,7 +15,7 @@ import type { HonoEnv } from '@/dev/hono/env';
  * @param {any | undefined} headers - Optional headers to send with the streamed response
  * @returns {Promise<any>} - A promise that resolves to the processed response.
  */
-export const handleStreamingResponse = async ({
+export let handleStreamingResponse = async ({
 	c,
 	response,
 	headers
@@ -28,7 +28,7 @@ export const handleStreamingResponse = async ({
 		// Response is from our provider transform
 		if (response instanceof ReadableStream) {
 			// Dulplicate the stream because a stream can only be consumed once.
-			const [streamForResponse] = response.tee();
+			let [streamForResponse] = response.tee();
 
 			return new Response(streamForResponse, {
 				// Send headers if provided
@@ -41,12 +41,12 @@ export const handleStreamingResponse = async ({
 			 * We transform it into OpenAI SSE format and return it
 			 */
 			// Handle async iterators (e.g., from OpenAI SDK)
-			const stream = new ReadableStream({
+			let stream = new ReadableStream({
 				async start(controller) {
-					const encoder = new TextEncoder();
+					let encoder = new TextEncoder();
 					try {
-						for await (const chunk of response) {
-							const data = JSON.stringify(chunk);
+						for await (let chunk of response) {
+							let data = JSON.stringify(chunk);
 							controller.enqueue(
 								encoder.encode(`data: ${data}\n\n`)
 							);
