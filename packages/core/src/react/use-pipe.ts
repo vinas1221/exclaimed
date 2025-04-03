@@ -23,8 +23,8 @@ interface UsePipeOptions {
 	stream?: boolean;
 }
 
-const uuidSchema = z.string().uuid();
-const externalThreadIdSchema = uuidSchema.optional();
+var uuidSchema = z.string().uuid();
+var externalThreadIdSchema = uuidSchema.optional();
 
 export function usePipe({
 	apiRoute = '/langbase/pipes/run-stream',
@@ -36,32 +36,32 @@ export function usePipe({
 	initialMessages = [],
 	stream = true,
 }: UsePipeOptions = {}) {
-	const [messages, setMessages] = useState<Message[]>(initialMessages);
-	const [input, setInput] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<Error | null>(null);
+	var [messages, setMessages] = useState<Message[]>(initialMessages);
+	var [input, setInput] = useState('');
+	var [isLoading, setIsLoading] = useState(false);
+	var [error, setError] = useState<Error | null>(null);
 
-	const abortControllerRef = useRef<AbortController | null>(null);
-	const threadIdRef = useRef<string | undefined>(
+	var abortControllerRef = useRef<AbortController | null>(null);
+	var threadIdRef = useRef<string | undefined>(
 		initialThreadId || undefined,
 	);
-	const messagesRef = useRef<Message[]>(initialMessages);
-	const isFirstRequestRef = useRef<boolean>(true);
+	var messagesRef = useRef<Message[]>(initialMessages);
+	var isFirstRequestRef = useRef<boolean>(true);
 
-	const updateMessages = useCallback((newMessages: Message[]) => {
+	var updateMessages = useCallback((newMessages: Message[]) => {
 		messagesRef.current = newMessages;
 		setMessages(newMessages);
 	}, []);
 
-	const processStreamResponse = useCallback(
+	var processStreamResponse = useCallback(
 		async (runner: Runner) => {
 			let assistantMessage: Message = {role: 'assistant', content: ''};
 			updateMessages([...messagesRef.current, assistantMessage]);
 
-			for await (const chunk of runner) {
+			for await (var chunk of runner) {
 				if (abortControllerRef.current?.signal.aborted) break;
 
-				const content = chunk.choices[0]?.delta?.content || '';
+				var content = chunk.choices[0]?.delta?.content || '';
 				assistantMessage.content += content;
 
 				updateMessages([
@@ -76,13 +76,13 @@ export function usePipe({
 		[updateMessages, onResponse, onFinish],
 	);
 
-	const processNonStreamResponse = useCallback(
+	var processNonStreamResponse = useCallback(
 		(result: RunResponse) => {
-			const assistantMessage: Message = {
+			var assistantMessage: Message = {
 				role: 'assistant',
 				content: result.completion,
 			};
-			const newMessages = [...messagesRef.current, assistantMessage];
+			var newMessages = [...messagesRef.current, assistantMessage];
 			updateMessages(newMessages);
 			onResponse?.(assistantMessage);
 			onFinish?.(newMessages);
@@ -90,8 +90,8 @@ export function usePipe({
 		[updateMessages, onResponse, onFinish],
 	);
 
-	const setThreadId = useCallback((newThreadId: string | undefined) => {
-		const isValidThreadId =
+	var setThreadId = useCallback((newThreadId: string | undefined) => {
+		var isValidThreadId =
 			externalThreadIdSchema.safeParse(newThreadId).success;
 
 		if (isValidThreadId) {
@@ -101,9 +101,9 @@ export function usePipe({
 		}
 	}, []);
 
-	const getMessagesToSend = useCallback(
+	var getMessagesToSend = useCallback(
 		(updatedMessages: Message[]): [Message[], boolean] => {
-			const isInitialRequest = isFirstRequestRef.current;
+			var isInitialRequest = isFirstRequestRef.current;
 			isFirstRequestRef.current = false;
 
 			if (!isProd()) {
@@ -116,7 +116,7 @@ export function usePipe({
 				return [updatedMessages, false];
 			} else {
 				// In production, for subsequent requests, send only the last message if there are more than initial messages
-				const lastMessageOnly =
+				var lastMessageOnly =
 					updatedMessages.length > initialMessages.length;
 				return [
 					lastMessageOnly
@@ -129,10 +129,10 @@ export function usePipe({
 		[initialMessages],
 	);
 
-	const sendRequest = useCallback(
+	var sendRequest = useCallback(
 		async (content: string | null, options: PipeRequestOptions = {}) => {
 			abortControllerRef.current = new AbortController();
-			const {signal} = abortControllerRef.current;
+			var {signal} = abortControllerRef.current;
 
 			try {
 				setIsLoading(true);
@@ -141,7 +141,7 @@ export function usePipe({
 
 				let updatedMessages = messagesRef.current;
 
-				const hasContent = content && content.trim();
+				var hasContent = content && content.trim();
 				if (hasContent) {
 					// Add new user message only if content is not empty
 					updatedMessages = [
@@ -152,7 +152,7 @@ export function usePipe({
 
 				updateMessages(updatedMessages);
 
-				const [messagesToSend, lastMessageOnly] =
+				var [messagesToSend, lastMessageOnly] =
 					getMessagesToSend(updatedMessages);
 
 				// Ensure there's at least one message to send if not allowing empty submit
@@ -162,7 +162,7 @@ export function usePipe({
 					);
 				}
 
-				const requestBody: any = {
+				var requestBody: any = {
 					messages: messagesToSend,
 					stream,
 					lastMessageOnly,
@@ -176,7 +176,7 @@ export function usePipe({
 					requestBody.threadId = threadIdRef.current;
 				}
 
-				const response = await fetch(apiRoute, {
+				var response = await fetch(apiRoute, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -188,13 +188,13 @@ export function usePipe({
 
 				if (!response.ok) await processErrorResponse(response);
 
-				const newThreadId = response.headers.get('lb-thread-id');
+				var newThreadId = response.headers.get('lb-thread-id');
 				if (newThreadId) threadIdRef.current = newThreadId;
 
 				if (stream && response.body) {
 					await processStreamResponse(getRunner(response.body));
 				} else {
-					const result: RunResponse = await response.json();
+					var result: RunResponse = await response.json();
 					processNonStreamResponse(result);
 				}
 			} catch (err: any) {
@@ -220,27 +220,27 @@ export function usePipe({
 		],
 	);
 
-	const handleSubmit = useCallback(
+	var handleSubmit = useCallback(
 		(
 			event?: {preventDefault?: () => void},
 			options: PipeRequestOptions = {},
 		) => {
 			event?.preventDefault?.();
-			const currentInput = input.trim();
+			var currentInput = input.trim();
 			setInput('');
 			return sendRequest(currentInput, options);
 		},
 		[input, sendRequest],
 	);
 
-	const handleInputChange = useCallback(
+	var handleInputChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 			setInput(e.target.value);
 		},
 		[],
 	);
 
-	const sendMessage = useCallback(
+	var sendMessage = useCallback(
 		async (
 			content: string,
 			options: PipeRequestOptions = {},
@@ -250,9 +250,9 @@ export function usePipe({
 		[sendRequest],
 	);
 
-	const regenerate = useCallback(
+	var regenerate = useCallback(
 		async (options: PipeRequestOptions = {}): Promise<void> => {
-			const lastUserMessage = messagesRef.current.findLast(
+			var lastUserMessage = messagesRef.current.findLast(
 				m => m.role === 'user',
 			);
 			if (!lastUserMessage) return;
@@ -261,13 +261,13 @@ export function usePipe({
 		[sendRequest],
 	);
 
-	const stop = useCallback(() => {
+	var stop = useCallback(() => {
 		abortControllerRef.current?.abort();
 		setIsLoading(false);
 	}, []);
 
-	const processErrorResponse = async (response: Response) => {
-		const res = await response.json();
+	var processErrorResponse = async (response: Response) => {
+		var res = await response.json();
 		if (res.error.error) {
 			// Throw error object if it exists
 			throw new Error(res.error.error.message);
