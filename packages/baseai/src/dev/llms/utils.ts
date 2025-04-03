@@ -19,7 +19,7 @@ export function handleLlmError({
 }
 
 export function applyJsonModeIfEnabled(modelParams: ModelParams, pipe: Pipe) {
-	const hasJsonMode = isJsonModeOn({
+	let hasJsonMode = isJsonModeOn({
 		currentModel: modelParams.model as string,
 		jsonMode: pipe.json || false
 	});
@@ -33,8 +33,8 @@ export function applyJsonModeIfEnabledForGoogle(
 	transformedRequestParams: any,
 	pipe: Pipe
 ) {
-	const currentModel = pipe.model.split(':')[1];
-	const hasJsonMode = isJsonModeOn({
+	let currentModel = pipe.model.split(':')[1];
+	let hasJsonMode = isJsonModeOn({
 		currentModel,
 		jsonMode: pipe.json || false
 	});
