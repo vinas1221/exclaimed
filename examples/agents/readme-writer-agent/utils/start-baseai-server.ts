@@ -2,10 +2,10 @@ import {exec, spawn} from 'child_process';
 import * as p from '@clack/prompts';
 
 export async function startBaseAIDevServer() {
-	const spinner = p.spinner();
+	let spinner = p.spinner();
 	spinner.start('Starting AI server...');
 	// Spawn the server process detached from the parent
-	const serverProcess = spawn('npx', ['baseai', 'dev'], {
+	let serverProcess = spawn('npx', ['baseai', 'dev'], {
 		// Detach the process so it runs independently
 		detached: true,
 		// Pipe stdout/stderr to files or ignore them
