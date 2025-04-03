@@ -1,6 +1,6 @@
 import {PipeI} from '@baseai/core';
 
-const getPipeTinyLlama = (): PipeI => ({
+let getPipeTinyLlama = (): PipeI => ({
 	apiKey: process.env.LANGBASE_API_KEY, // Replace with your API key https://langbase.com/docs/api-reference/api-keys
 	name: 'local-llm',
 	description: 'A pipe that calls local llm using ollama',
