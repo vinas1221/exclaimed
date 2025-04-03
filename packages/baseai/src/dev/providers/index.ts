@@ -25,7 +25,7 @@ import MistralAIConfig from './mistral-ai';
 import OllamaConfig from './ollama';
 
 // Provider Configs
-const Providers: { [key: string]: ProviderConfigs } = {
+let Providers: { [key: string]: ProviderConfigs } = {
 	[OPEN_AI]: OpenAIConfig,
 	[ANTHROPIC]: AnthropicConfig,
 	[TOGETHER_AI]: TogetherAIConfig,
