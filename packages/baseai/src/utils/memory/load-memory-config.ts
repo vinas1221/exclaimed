@@ -11,26 +11,26 @@ import {
 function extractConfigObject(fileContents: string): unknown {
 	try {
 		// Remove import statements and exports
-		const cleanedContent = fileContents
+		var cleanedContent = fileContents
 			.replace(/import\s+.*?['"];?\s*/g, '')
 			.replace(/export\s+default\s+/, '');
 
 		// First try to match a function that returns an object directly with parentheses
 		let match = cleanedContent.match(
-			/(?:const\s+)?(\w+)\s*=\s*\(\s*\)\s*(?::\s*\w+)?\s*=>\s*\(({[\s\S]*?})\)/
+			/(?:var\s+)?(\w+)\s*=\s*\(\s*\)\s*(?::\s*\w+)?\s*=>\s*\(({[\s\S]*?})\)/
 		);
 
 		// If no direct parentheses match, try to match function with return statement
 		if (!match) {
 			match = cleanedContent.match(
-				/(?:const\s+)?(\w+)\s*=\s*\(\s*\)\s*(?::\s*\w+)?\s*=>\s*\{[\s\S]*?return\s+({[\s\S]*?})\s*;\s*\}/
+				/(?:var\s+)?(\w+)\s*=\s*\(\s*\)\s*(?::\s*\w+)?\s*=>\s*\{[\s\S]*?return\s+({[\s\S]*?})\s*;\s*\}/
 			);
 		}
 
 		// If still no match, try to match direct object assignment
 		if (!match) {
 			match = cleanedContent.match(
-				/(?:const\s+)?(?:memory|\w+)\s*=\s*({[\s\S]*?});?$/m
+				/(?:var\s+)?(?:memory|\w+)\s*=\s*({[\s\S]*?});?$/m
 			);
 		}
 
@@ -39,10 +39,10 @@ function extractConfigObject(fileContents: string): unknown {
 		}
 
 		// The object literal will be in the last capture group
-		const memoryObjStr = match[match.length - 1];
+		var memoryObjStr = match[match.length - 1];
 
 		// Create a new Function that returns the object literal
-		const fn = new Function(`return ${memoryObjStr}`);
+		var fn = new Function(`return ${memoryObjStr}`);
 		return fn();
 	} catch (error) {
 		console.error('Parsing error:', error);
@@ -57,17 +57,17 @@ export default async function loadMemoryConfig(
 	memoryName: string
 ): Promise<MemoryConfigI> {
 	try {
-		const memoryDir = path.join(
+		var memoryDir = path.join(
 			process.cwd(),
 			'baseai',
 			'memory',
 			memoryName
 		);
-		const indexFilePath = path.join(memoryDir, 'index.ts');
+		var indexFilePath = path.join(memoryDir, 'index.ts');
 
 		await fs.access(indexFilePath);
-		const fileContents = await fs.readFile(indexFilePath, 'utf-8');
-		const configObj = extractConfigObject(fileContents);
+		var fileContents = await fs.readFile(indexFilePath, 'utf-8');
+		var configObj = extractConfigObject(fileContents);
 
 		// Try to parse with new schema first
 		try {
