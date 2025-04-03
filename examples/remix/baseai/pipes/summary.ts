@@ -1,6 +1,6 @@
 import {Pipe} from '../../../../packages/core/types/pipes';
 
-let getPipeSummary = (): Pipe => ({
+const getPipeSummary = (): Pipe => ({
 	apiKey: process.env.LANGBASE_USER_API_KEY!,
 	name: 'summary',
 	description: 'AI Summary agent',
