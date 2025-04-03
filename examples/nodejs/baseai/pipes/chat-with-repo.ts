@@ -1,7 +1,7 @@
 import {PipeI} from '@baseai/core';
 import chatWithRepoMemory from '../memory/chat-with-repo';
 
-const buildPipe = (): PipeI => ({
+let buildPipe = (): PipeI => ({
 	apiKey: process.env.LANGBASE_API_KEY!, // Replace with your API key https://langbase.com/docs/api-reference/api-keys
 	name: 'chat-with-docs',
 	description: '',
