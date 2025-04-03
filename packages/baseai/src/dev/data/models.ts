@@ -1,17 +1,17 @@
-export let OPEN_AI: string = 'OpenAI';
-export let ANTHROPIC: string = 'Anthropic';
-export let TOGETHER_AI: string = 'Together';
-export let GOOGLE: string = 'Google';
-export let GROQ: string = 'Groq';
-export let COHERE: string = 'Cohere';
-export let FIREWORKS_AI: string = 'Fireworks AI';
-export let PERPLEXITY: string = 'Perplexity';
-export let MISTRAL_AI: string = 'Mistral AI';
-export let DEEPINFRA: string = 'deepinfra';
-export let BEDROCK: string = 'bedrock';
-export let AZURE_OPEN_AI: string = 'azure-openai';
-export let OLLAMA: string = 'ollama';
-export let X_AI: string = 'xAI';
+export const OPEN_AI: string = 'OpenAI';
+export const ANTHROPIC: string = 'Anthropic';
+export const TOGETHER_AI: string = 'Together';
+export const GOOGLE: string = 'Google';
+export const GROQ: string = 'Groq';
+export const COHERE: string = 'Cohere';
+export const FIREWORKS_AI: string = 'Fireworks AI';
+export const PERPLEXITY: string = 'Perplexity';
+export const MISTRAL_AI: string = 'Mistral AI';
+export const DEEPINFRA: string = 'deepinfra';
+export const BEDROCK: string = 'bedrock';
+export const AZURE_OPEN_AI: string = 'azure-openai';
+export const OLLAMA: string = 'ollama';
+export const X_AI: string = 'xAI';
 
 interface Model {
 	id: string;
@@ -29,7 +29,7 @@ interface ModelsByProviderInclCosts {
 	[provider: string]: Model[];
 }
 
-export let modelsByProvider: ModelsByProviderInclCosts = {
+export const modelsByProvider: ModelsByProviderInclCosts = {
 	[OPEN_AI]: [
 		{
 			id: 'gpt-4o',
@@ -561,7 +561,7 @@ export let modelsByProvider: ModelsByProviderInclCosts = {
 	]
 };
 
-export let jsonModeModels = [
+export const jsonModeModels = [
 	'gpt-4o',
 	'gpt-4o-mini-2024-07-18-free',
 	'gpt-4o-2024-08-06',
