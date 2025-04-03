@@ -18,13 +18,13 @@ export function getRunThread({
 	variables?: VariablesI;
 }) {
 	try {
-		const systemPromptMessage = getSystemPromptMessage({
+		let systemPromptMessage = getSystemPromptMessage({
 			pipe,
 			similarChunks
 		});
-		const pipeFewShotsMessages = getPipeFewShotsMessages(pipe);
+		let pipeFewShotsMessages = getPipeFewShotsMessages(pipe);
 
-		const messagesThread = [
+		let messagesThread = [
 			// Messages in the pipe
 			...systemPromptMessage,
 			...pipeFewShotsMessages,
@@ -32,7 +32,7 @@ export function getRunThread({
 			...messages
 		];
 
-		const { messages: messagesThreadWithVars } = processMessages({
+		let { messages: messagesThreadWithVars } = processMessages({
 			pipe,
 			messages: messagesThread,
 			variables
