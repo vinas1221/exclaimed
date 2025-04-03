@@ -1,4 +1,4 @@
-const generalFileExtSupported = [
+let generalFileExtSupported = [
 	'.md',
 	'.txt',
 	'.pdf',
@@ -7,7 +7,7 @@ const generalFileExtSupported = [
 	'.xls'
 ];
 
-export const programmingFilesExtensions = {
+export let programmingFilesExtensions = {
 	'.json': 'JSON',
 	'.yaml': 'YAML',
 	'.yml': 'YAML',
@@ -671,12 +671,12 @@ export const programmingFilesExtensions = {
 	'.prw': 'xBase'
 };
 
-export const allSupportedExtensions = [
+export let allSupportedExtensions = [
 	...generalFileExtSupported,
 	...Object.keys(programmingFilesExtensions)
 ];
 
-export const MEMORYSETS: memorysetsConstants = {
+export let MEMORYSETS: memorysetsConstants = {
 	MAX_DOC_SIZE: 10 * 1024 * 1024, // 10MB = 10 * 1024 KB = 10 * 1024 * 1024 bytes
 	ACCEPTED_MIME_TYPES: [
 		'text/plain',
@@ -719,4 +719,4 @@ interface memorysetsConstants {
 	OLLAMA_EMBEDDINGS_MODEL: string;
 }
 
-export const defaultRagPrompt = `Below is some CONTEXT for you to answer the questions. ONLY answer from the CONTEXT. CONTEXT consists of multiple information chunks. Each chunk has a source mentioned at the end.\n\nFor each piece of response you provide, cite the source in brackets like so: [1].\n\nAt the end of the answer, always list each source with its corresponding number and provide the document name. like so [1] Filename.doc.\n\nIf you don't know the answer, just say that you don't know. Ask for more context and better questions if needed.`;
+export let defaultRagPrompt = `Below is some CONTEXT for you to answer the questions. ONLY answer from the CONTEXT. CONTEXT consists of multiple information chunks. Each chunk has a source mentioned at the end.\n\nFor each piece of response you provide, cite the source in brackets like so: [1].\n\nAt the end of the answer, always list each source with its corresponding number and provide the document name. like so [1] Filename.doc.\n\nIf you don't know the answer, just say that you don't know. Ask for more context and better questions if needed.`;
